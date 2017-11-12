@@ -1,0 +1,112 @@
+package com.auto.techno
+
+import android.content.Context
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
+import android.support.v4.media.session.PlaybackStateCompat.STATE_BUFFERING
+import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.source.TrackGroupArray
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Util
+
+class PlayerHolder(private val context: Context,
+                   private val session: MediaSessionCompat) : Player.EventListener {
+
+    private var player: SimpleExoPlayer? = null
+
+    fun createPlayer() {
+        setPlaybackState(STATE_BUFFERING)
+        player = ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector())
+        player!!.addListener(this)
+    }
+
+    fun startPlaying(mediaId: String) {
+        val mediaSource = ExtractorMediaSource(
+                Uri.parse(mediaId),
+                DefaultDataSourceFactory(context, Util.getUserAgent(context, "autotechno"), null),
+                DefaultExtractorsFactory(),
+                null,
+                null)
+
+        requireNotNull(player).apply {
+            prepare(mediaSource)
+            playWhenReady = true
+        }
+
+        session.setMetadata(MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "DI.FM")
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "Techno Channel")
+                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, BitmapFactory.decodeResource(context.resources, ChannelHelper.getImageForMedia(mediaId)))
+                .build())
+    }
+
+    fun stopPlaying() {
+        requireNotNull(player).stop()
+    }
+
+    fun releasePlayer() {
+        setPlaybackState(STATE_STOPPED)
+        player?.removeListener(this)
+        player?.release()
+        player = null
+    }
+
+    private fun setPlaybackState(state: Int) {
+        session.setPlaybackState(PlaybackStateCompat.Builder()
+                .setState(state, 0, 0f)
+                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE or
+                            PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
+                            PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+                .build())
+    }
+
+    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+        when (playbackState) {
+            Player.STATE_READY -> setPlaybackState(PlaybackStateCompat.STATE_PLAYING)
+            Player.STATE_BUFFERING -> setPlaybackState(PlaybackStateCompat.STATE_BUFFERING)
+            Player.STATE_ENDED -> setPlaybackState(PlaybackStateCompat.STATE_STOPPED)
+            Player.STATE_IDLE -> setPlaybackState(PlaybackStateCompat.STATE_PAUSED)
+            else -> setPlaybackState(PlaybackStateCompat.STATE_NONE)
+        }
+    }
+
+    override fun onLoadingChanged(isLoading: Boolean) {
+        if (isLoading) {
+            setPlaybackState(PlaybackStateCompat.STATE_BUFFERING)
+        } else {
+            setPlaybackState(PlaybackStateCompat.STATE_PLAYING)
+        }
+    }
+
+    override fun onPlayerError(error: ExoPlaybackException?) {
+        setPlaybackState(PlaybackStateCompat.STATE_ERROR)
+    }
+
+    override fun onPlaybackParametersChanged(playbackParameters: PlaybackParameters?) {
+        // Not implemented
+    }
+
+    override fun onTracksChanged(trackGroups: TrackGroupArray?, trackSelections: TrackSelectionArray?) {
+        // Not implemented
+    }
+
+    override fun onPositionDiscontinuity() {
+        // Not implemented
+    }
+
+    override fun onRepeatModeChanged(repeatMode: Int) {
+        // Not implemented
+    }
+
+    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
+        // Not implemented
+    }
+}

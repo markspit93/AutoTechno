@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Auto Techno</string>
+
+    <string name="channel_url">http://hot.friezy.ru/?radio=di&amp;station=%s&amp;bitrate=128</string>
+</resources>
