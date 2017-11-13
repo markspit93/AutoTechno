@@ -7,6 +7,9 @@ For more information:
  * https://developer.android.com/guide/topics/media/exoplayer.html
  * https://google.github.io/ExoPlayer/guide.html
 
+Screenshots
+======
+
 ![Media Session](screenshot1.PNG)
 
 ![Media Browser](screenshot2.PNG)
