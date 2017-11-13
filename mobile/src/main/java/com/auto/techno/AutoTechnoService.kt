@@ -81,9 +81,13 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
         }
 
         override fun onSkipToNext() {
+            lastMediaId = ChannelHelper.getNextMediaId(lastMediaId)
+            onPlay()
         }
 
         override fun onSkipToPrevious() {
+            lastMediaId = ChannelHelper.getPreviousMediaId(lastMediaId)
+            onPlay()
         }
     }
 

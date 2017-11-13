@@ -40,4 +40,24 @@ object ChannelHelper {
 
         return channelList[0]
     }
+
+    fun getNextMediaId(currentMediaId: String): String {
+        channelList.indexOf(getChannelForId(currentMediaId)).let {
+            return if (it == channelList.size) {
+                channelList[0].mediaId
+            } else {
+                channelList[it + 1].mediaId
+            }
+        }
+    }
+
+    fun getPreviousMediaId(currentMediaId: String): String {
+        channelList.indexOf(getChannelForId(currentMediaId)).let {
+            return if (it == 0) {
+                channelList[channelList.lastIndex].mediaId
+            } else {
+                channelList[it - 1].mediaId
+            }
+        }
+    }
 }
