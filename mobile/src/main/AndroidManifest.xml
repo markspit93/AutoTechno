@@ -32,6 +32,10 @@
             </intent-filter>
         </service>
 
+        <meta-data
+            android:name="com.google.android.gms.car.notification.SmallIcon"
+            android:resource="@mipmap/ic_launcher" />
+
     </application>
 
 </manifest>

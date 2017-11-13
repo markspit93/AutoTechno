@@ -1,6 +1,9 @@
 package com.auto.techno
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioManager
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
@@ -14,6 +17,7 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
     private var session: MediaSessionCompat by notNull()
     private var lastMediaId by stringSharedPreference("pref_last_media_id", "")
     private val playerHolder: PlayerHolder by lazy { PlayerHolder(this@AutoTechnoService, session) }
+    private val connectedReceiver = ConnectedReceiver()
 
     override fun onCreate() {
         super.onCreate()
@@ -26,9 +30,12 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
 
         playerHolder.createPlayer()
         playerHolder.setMetaData(ChannelHelper.getChannelForId(lastMediaId))
+
+        registerReceiver(connectedReceiver, IntentFilter("com.google.android.gms.car.media.STATUS"))
     }
 
     override fun onDestroy() {
+        unregisterReceiver(connectedReceiver)
         playerHolder.releasePlayer()
         session.release()
     }
@@ -77,6 +84,14 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
         }
 
         override fun onSkipToPrevious() {
+        }
+    }
+
+    private inner class ConnectedReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.getStringExtra("media_connection_status") != "media_connected") {
+                playerHolder.stopPlaying()
+            }
         }
     }
 }
