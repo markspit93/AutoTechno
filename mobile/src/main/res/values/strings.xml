@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Auto Techno</string>
+    <string name="desc">Connect your phone to an Android Auto compatible car.</string>
 </resources>
