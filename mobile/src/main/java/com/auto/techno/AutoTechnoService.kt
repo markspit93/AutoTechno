@@ -6,12 +6,13 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.MediaBrowserServiceCompat
 import android.support.v4.media.session.MediaSessionCompat
+import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import kotlin.properties.Delegates.notNull
 
 class AutoTechnoService : MediaBrowserServiceCompat() {
 
     private var session: MediaSessionCompat by notNull()
-    private var lastMediaId: String = ""
+    private var lastMediaId by stringSharedPreference("pref_last_media_id", "")
     private val playerHolder: PlayerHolder by lazy { PlayerHolder(this@AutoTechnoService, session) }
 
     override fun onCreate() {
@@ -24,6 +25,7 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
         session.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
 
         playerHolder.createPlayer()
+        playerHolder.setMetaData(ChannelHelper.getChannelForId(lastMediaId))
     }
 
     override fun onDestroy() {

@@ -6,7 +6,6 @@ import android.net.Uri
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.support.v4.media.session.PlaybackStateCompat.STATE_BUFFERING
 import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -23,7 +22,7 @@ class PlayerHolder(private val context: Context,
     private var player: SimpleExoPlayer? = null
 
     fun createPlayer() {
-        setPlaybackState(STATE_BUFFERING)
+        setPlaybackState(STATE_STOPPED)
         player = ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector())
         player!!.addListener(this)
     }
@@ -41,6 +40,10 @@ class PlayerHolder(private val context: Context,
             playWhenReady = true
         }
 
+        setMetaData(channel)
+    }
+
+    fun setMetaData(channel: Channel) {
         session.setMetadata(MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "DI.FM")
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "${channel.title} Channel")
