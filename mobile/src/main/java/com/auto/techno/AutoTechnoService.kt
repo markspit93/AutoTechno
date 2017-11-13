@@ -49,13 +49,13 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
 
             if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 session.isActive = true
-                playerHolder.startPlaying(lastMediaId)
+                playerHolder.startPlaying(ChannelHelper.getChannelForId(lastMediaId))
             }
         }
 
         override fun onPlayFromMediaId(mediaId: String, extras: Bundle) {
-            onPlay()
             lastMediaId = mediaId
+            onPlay()
         }
 
         override fun onPause() {

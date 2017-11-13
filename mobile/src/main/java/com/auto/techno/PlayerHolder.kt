@@ -28,9 +28,9 @@ class PlayerHolder(private val context: Context,
         player!!.addListener(this)
     }
 
-    fun startPlaying(mediaId: String) {
+    fun startPlaying(channel: Channel) {
         val mediaSource = ExtractorMediaSource(
-                Uri.parse(mediaId),
+                Uri.parse("http://hot.friezy.ru/?radio=di&station=${channel.mediaId}&bitrate=128"),
                 DefaultDataSourceFactory(context, Util.getUserAgent(context, "autotechno"), null),
                 DefaultExtractorsFactory(),
                 null,
@@ -43,8 +43,8 @@ class PlayerHolder(private val context: Context,
 
         session.setMetadata(MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "DI.FM")
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "Techno Channel")
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, BitmapFactory.decodeResource(context.resources, ChannelHelper.getImageForMedia(mediaId)))
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "${channel.title} Channel")
+                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, BitmapFactory.decodeResource(context.resources, channel.imageRes))
                 .build())
     }
 
