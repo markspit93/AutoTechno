@@ -16,7 +16,8 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
 
     private var session: MediaSessionCompat by notNull()
     private var lastMediaId by stringSharedPreference("pref_last_media_id", "")
-    private val playerHolder: PlayerHolder by lazy { PlayerHolder(this@AutoTechnoService, session) }
+    private val playerHolder by lazyAndroid { PlayerHolder(this, session) }
+    private val audioFocusHolder by lazyAndroid { AudioFocusHolder(this) }
     private val connectedReceiver = ConnectedReceiver()
 
     override fun onCreate() {
@@ -50,13 +51,8 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
 
     private inner class MediaSessionCallback : MediaSessionCompat.Callback() {
 
-        private val audioFocusListener = AudioManager.OnAudioFocusChangeListener { }
-
         private fun play(mediaId: String) {
-            val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            val result = am.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
-
-            if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            if (audioFocusHolder.getAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 session.isActive = true
                 lastMediaId = mediaId
                 playerHolder.startPlaying(ChannelHelper.getChannelForId(mediaId))
@@ -84,12 +80,10 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
         }
 
         override fun onStop() {
-            val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            am.abandonAudioFocus(audioFocusListener)
-
-            stopSelf()
+            audioFocusHolder.abandonAudioFocus()
             session.isActive = false
             playerHolder.stopPlaying()
+            stopSelf()
         }
     }
 
