@@ -52,19 +52,31 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
 
         private val audioFocusListener = AudioManager.OnAudioFocusChangeListener { }
 
-        override fun onPlay() {
+        private fun play(mediaId: String) {
             val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
             val result = am.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
 
             if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 session.isActive = true
-                playerHolder.startPlaying(ChannelHelper.getChannelForId(lastMediaId))
+                lastMediaId = mediaId
+                playerHolder.startPlaying(ChannelHelper.getChannelForId(mediaId))
             }
         }
 
+        override fun onPlay() {
+            play(lastMediaId)
+        }
+
         override fun onPlayFromMediaId(mediaId: String, extras: Bundle) {
-            lastMediaId = mediaId
-            onPlay()
+            play(lastMediaId)
+        }
+
+        override fun onSkipToNext() {
+            play(ChannelHelper.getNextMediaId(lastMediaId))
+        }
+
+        override fun onSkipToPrevious() {
+            play(ChannelHelper.getPreviousMediaId(lastMediaId))
         }
 
         override fun onPause() {
@@ -78,16 +90,6 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
             stopSelf()
             session.isActive = false
             playerHolder.stopPlaying()
-        }
-
-        override fun onSkipToNext() {
-            lastMediaId = ChannelHelper.getNextMediaId(lastMediaId)
-            onPlay()
-        }
-
-        override fun onSkipToPrevious() {
-            lastMediaId = ChannelHelper.getPreviousMediaId(lastMediaId)
-            onPlay()
         }
     }
 
