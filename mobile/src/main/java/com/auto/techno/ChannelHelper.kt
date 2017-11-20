@@ -11,7 +11,9 @@ object ChannelHelper {
             Channel("techno", "Techno", R.drawable.techno),
             Channel("detroithousentechno", "Detroit House & Techno", R.drawable.detroit_house_techno),
             Channel("undergroundtechno", "Underground Techno", R.drawable.underground_techno),
-            Channel("techhouse", "Tech House", R.drawable.tech_house)
+            Channel("progressive", "Progressive", R.drawable.progressive),
+            Channel("techhouse", "Tech House", R.drawable.tech_house),
+            Channel("house", "House", R.drawable.house)
     )
 
     fun createListing(context: Context): ArrayList<MediaItem> {
