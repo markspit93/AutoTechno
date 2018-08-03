@@ -8,7 +8,6 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -28,12 +27,14 @@ class PlayerHolder(private val context: Context,
     }
 
     fun startPlaying(channel: Channel) {
-        val mediaSource = ExtractorMediaSource(
-                Uri.parse("http://prem4.di.fm:80/${channel.mediaId}?insertlistenerkeyhere"),
-                DefaultDataSourceFactory(context, Util.getUserAgent(context, "autotechno"), null),
-                DefaultExtractorsFactory(),
-                null,
-                null)
+        val mediaSource = ExtractorMediaSource.Factory(
+                DefaultDataSourceFactory(
+                        context,
+                        Util.getUserAgent(context, "autotechno")
+                )
+        ).createMediaSource(
+                Uri.parse("http://prem4.di.fm:80/${channel.mediaId}?insertlistenerkeyhere")
+        )
 
         requireNotNull(player).apply {
             prepare(mediaSource)
