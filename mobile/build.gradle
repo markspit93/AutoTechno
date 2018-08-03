@@ -45,4 +45,6 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.8.2'
 
     implementation 'it.czerwinski.android:delegates-shared-preferences:0.1'
+
+    implementation 'saschpe.android:exoplayer2-ext-icy:1.0.1'
 }
