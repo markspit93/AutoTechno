@@ -66,8 +66,8 @@ class PlayerHolder(private val context: Context,
         session.setPlaybackState(PlaybackStateCompat.Builder()
                 .setState(state, 0, 0f)
                 .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE or
-                            PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
-                            PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+                        PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
+                        PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
                 .build())
     }
 
@@ -101,15 +101,23 @@ class PlayerHolder(private val context: Context,
         // Not implemented
     }
 
-    override fun onPositionDiscontinuity() {
-        // Not implemented
-    }
-
     override fun onRepeatModeChanged(repeatMode: Int) {
         // Not implemented
     }
 
-    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
+    override fun onPositionDiscontinuity(reason: Int) {
+        // Not implemented
+    }
+
+    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {
+        // Not implemented
+    }
+
+    override fun onSeekProcessed() {
+        // Not implemented
+    }
+
+    override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         // Not implemented
     }
 }
