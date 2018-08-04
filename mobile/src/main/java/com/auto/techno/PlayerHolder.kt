@@ -29,7 +29,7 @@ class PlayerHolder(private val context: Context,
 
     fun startPlaying(channel: Channel) {
         val mediaSource = ExtractorMediaSource(
-                Uri.parse("http://hot.friezy.ru/?radio=di&station=${channel.mediaId}&bitrate=128"),
+                Uri.parse("http://prem4.di.fm:80/${channel.mediaId}?insertlistenerkeyhere"),
                 DefaultDataSourceFactory(context, Util.getUserAgent(context, "autotechno"), null),
                 DefaultExtractorsFactory(),
                 null,
