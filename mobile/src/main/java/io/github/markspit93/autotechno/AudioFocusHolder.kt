@@ -1,4 +1,4 @@
-package com.auto.techno
+package io.github.markspit93.autotechno
 
 import android.content.Context
 import android.media.AudioFocusRequest
