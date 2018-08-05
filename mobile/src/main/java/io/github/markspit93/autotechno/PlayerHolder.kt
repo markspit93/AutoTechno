@@ -1,4 +1,4 @@
-package com.auto.techno
+package io.github.markspit93.autotechno
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -7,14 +7,15 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
+import android.util.Log
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import saschpe.exoplayer2.ext.icy.IcyHttpDataSourceFactory
 
 class PlayerHolder(private val context: Context,
                    private val session: MediaSessionCompat) : Player.EventListener {
@@ -28,12 +29,34 @@ class PlayerHolder(private val context: Context,
     }
 
     fun startPlaying(channel: Channel) {
-        val mediaSource = ExtractorMediaSource(
-                Uri.parse("http://hot.friezy.ru/?radio=di&station=${channel.mediaId}&bitrate=128"),
-                DefaultDataSourceFactory(context, Util.getUserAgent(context, "autotechno"), null),
-                DefaultExtractorsFactory(),
-                null,
-                null)
+        val userAgent = Util.getUserAgent(context, "autotechno")
+        val icyHttpDataSourceFactory = IcyHttpDataSourceFactory.Builder(userAgent)
+                .setIcyHeadersListener { icyHeaders ->
+                    Log.d("XXX", "onIcyHeaders: %s".format(icyHeaders.toString()))
+                }
+                .setIcyMetadataChangeListener { icyMetadata ->
+                    Log.d("XXX", "onIcyMetaData: %s".format(icyMetadata.toString()))
+                    val artistTitle = icyMetadata.streamTitle.split(" - ")
+                    val artist = artistTitle.getOrNull(0) ?: ""
+                    val title = artistTitle.getOrNull(1) ?: ""
+                    session.setMetadata(MediaMetadataCompat.Builder()
+                            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
+                            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
+                            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "${channel.title} DI.FM")
+                            .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
+                                    BitmapFactory.decodeResource(context.resources, channel.imageRes))
+                            .build()
+                    )
+                }
+                .build()
+
+        val dataSourceFactory = DefaultDataSourceFactory(context, null, icyHttpDataSourceFactory)
+
+        val mediaSource = ExtractorMediaSource.Factory(
+                dataSourceFactory
+        ).createMediaSource(
+                Uri.parse("http://prem4.di.fm:80/${channel.mediaId}?insertlistenerkeyhere")
+        )
 
         requireNotNull(player).apply {
             prepare(mediaSource)
@@ -66,8 +89,8 @@ class PlayerHolder(private val context: Context,
         session.setPlaybackState(PlaybackStateCompat.Builder()
                 .setState(state, 0, 0f)
                 .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE or
-                            PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
-                            PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+                        PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
+                        PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
                 .build())
     }
 
@@ -101,15 +124,23 @@ class PlayerHolder(private val context: Context,
         // Not implemented
     }
 
-    override fun onPositionDiscontinuity() {
-        // Not implemented
-    }
-
     override fun onRepeatModeChanged(repeatMode: Int) {
         // Not implemented
     }
 
-    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?) {
+    override fun onPositionDiscontinuity(reason: Int) {
+        // Not implemented
+    }
+
+    override fun onTimelineChanged(timeline: Timeline?, manifest: Any?, reason: Int) {
+        // Not implemented
+    }
+
+    override fun onSeekProcessed() {
+        // Not implemented
+    }
+
+    override fun onShuffleModeEnabledChanged(shuffleModeEnabled: Boolean) {
         // Not implemented
     }
 }

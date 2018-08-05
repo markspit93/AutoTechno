@@ -3,9 +3,9 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    buildToolsVersion '27.0.3'
     defaultConfig {
-        applicationId "com.auto.techno"
+        applicationId "io.github.markspit93.autotechno"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 1
@@ -28,21 +28,23 @@ android {
 
 ext {
     anko_version = '0.10.2'
-    supportLibVersion = '27.0.1'
+    supportLibVersion = '27.1.1'
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "org.jetbrains.anko:anko-appcompat-v7-commons:$anko_version"
 
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:support-media-compat:$supportLibVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
 
-    implementation 'com.google.android.exoplayer:exoplayer:r2.5.4'
+    implementation 'com.google.android.exoplayer:exoplayer:2.8.2'
 
     implementation 'it.czerwinski.android:delegates-shared-preferences:0.1'
+
+    implementation 'saschpe.android:exoplayer2-ext-icy:1.0.1'
 }

@@ -1,4 +1,4 @@
-package com.auto.techno
+package io.github.markspit93.autotechno
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.auto.techno", appContext.packageName)
+        assertEquals("io.github.markspit93.techno", appContext.packageName)
     }
 }

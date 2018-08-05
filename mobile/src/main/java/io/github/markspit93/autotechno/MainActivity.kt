@@ -1,4 +1,4 @@
-package com.auto.techno
+package io.github.markspit93.autotechno
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
