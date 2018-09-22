@@ -64,6 +64,7 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
         }
 
         override fun onPlayFromMediaId(mediaId: String, extras: Bundle) {
+            lastMediaId = mediaId
             play(lastMediaId)
         }
 
