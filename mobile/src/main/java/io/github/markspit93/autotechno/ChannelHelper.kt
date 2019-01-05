@@ -8,12 +8,32 @@ import android.support.v4.media.MediaDescriptionCompat
 object ChannelHelper {
 
     private val channelList = listOf(
-            Channel("techno", "Techno", R.drawable.techno),
-            Channel("detroithousentechno", "Detroit House & Techno", R.drawable.detroit_house_techno),
-            Channel("undergroundtechno", "Underground Techno", R.drawable.underground_techno),
-            Channel("progressive", "Progressive", R.drawable.progressive),
-            Channel("techhouse", "Tech House", R.drawable.tech_house),
-            Channel("house", "House", R.drawable.house)
+            Channel("electroswing_hi", "Electro Swing", R.drawable.techno),
+            Channel("bassnjackinhouse_hi", "Bass & Jackin' House", R.drawable.techno),
+            Channel("synthwave_hi", "Synthwave", R.drawable.techno),
+            Channel("club_hi", "Club Sounds", R.drawable.techno),
+            Channel("progressivepsy_hi", "Progressive Psy", R.drawable.techno),
+            Channel("djmixes_hi", "DJ Mixes", R.drawable.techno),
+            Channel("vocalhouse_hi", "Vocal House", R.drawable.techno),
+            Channel("edm_hi", "EDM Hits", R.drawable.techno),
+            Channel("house_hi", "House", R.drawable.techno),
+            Channel("epictrance_hi", "Epic Trance", R.drawable.techno),
+            Channel("atmosphericbreaks_hi", "Atmospheric Breaks", R.drawable.techno),
+            Channel("chillstep_hi", "Chillstep", R.drawable.techno),
+            Channel("melodicprogressive_hi", "Melodic Progressive", R.drawable.techno),
+            Channel("vocalchillout_hi", "Vocal Chillout", R.drawable.techno),
+            Channel("progressive_hi", "Progressive", R.drawable.techno),
+            Channel("trance_hi", "Trance", R.drawable.techno),
+            Channel("vocaltrance_hi", "Vocal Trance", R.drawable.techno),
+            Channel("futurebass_hi", "Future Bass", R.drawable.techno),
+            Channel("liquidtrap_hi", "Liquid Trap", R.drawable.techno),
+            Channel("indiebeats_hi", "Indie Beats", R.drawable.techno),
+            Channel("chillntropicalhouse_hi", "Chill & Tropical House", R.drawable.techno),
+            Channel("indiedance_hi", "Indie Dance", R.drawable.techno),
+            Channel("liquiddubstep_hi", "Liquid Dubstep", R.drawable.techno),
+            Channel("liquiddnb_hi", "Liquid DnB", R.drawable.techno),
+            Channel("drumandbass_hi", "Drum and Bass", R.drawable.techno),
+            Channel("electrohouse_hi", "Electro House", R.drawable.techno)
     )
 
     fun createListing(context: Context): ArrayList<MediaItem> {
