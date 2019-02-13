@@ -9,12 +9,13 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
 import android.util.Log
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
+import okhttp3.OkHttpClient
 import saschpe.exoplayer2.ext.icy.IcyHttpDataSourceFactory
 
 class PlayerHolder(private val context: Context,
@@ -29,16 +30,18 @@ class PlayerHolder(private val context: Context,
     }
 
     fun startPlaying(channel: Channel) {
-        val userAgent = Util.getUserAgent(context, "autotechno")
-        val icyHttpDataSourceFactory = IcyHttpDataSourceFactory.Builder(userAgent)
+        val client = OkHttpClient.Builder().build()
+        val icyHttpDataSourceFactory = IcyHttpDataSourceFactory.Builder(client)
                 .setIcyHeadersListener { icyHeaders ->
-                    Log.d("XXX", "onIcyHeaders: %s".format(icyHeaders.toString()))
+                    Log.d("AutoTechno", "onIcyHeaders: %s".format(icyHeaders.toString()))
                 }
                 .setIcyMetadataChangeListener { icyMetadata ->
-                    Log.d("XXX", "onIcyMetaData: %s".format(icyMetadata.toString()))
+                    Log.d("AutoTechno", "onIcyMetaData: %s".format(icyMetadata.toString()))
+
                     val artistTitle = icyMetadata.streamTitle.split(" - ")
                     val artist = artistTitle.getOrNull(0) ?: ""
                     val title = artistTitle.getOrNull(1) ?: ""
+
                     session.setMetadata(MediaMetadataCompat.Builder()
                             .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
                             .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
@@ -52,11 +55,9 @@ class PlayerHolder(private val context: Context,
 
         val dataSourceFactory = DefaultDataSourceFactory(context, null, icyHttpDataSourceFactory)
 
-        val mediaSource = ExtractorMediaSource.Factory(
-                dataSourceFactory
-        ).createMediaSource(
-                Uri.parse("http://prem4.di.fm:80/${channel.mediaId}?insertlistenerkeyhere")
-        )
+        val mediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
+                .setExtractorsFactory(DefaultExtractorsFactory())
+                .createMediaSource(Uri.parse("http://prem4.di.fm:80/${channel.mediaId}?insertlistenerkeyhere"))
 
         requireNotNull(player).apply {
             prepare(mediaSource)

@@ -7,8 +7,8 @@ import android.content.IntentFilter
 import android.media.AudioManager
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.support.v4.media.MediaBrowserServiceCompat
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.media.MediaBrowserServiceCompat
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import kotlin.properties.Delegates.notNull
 
