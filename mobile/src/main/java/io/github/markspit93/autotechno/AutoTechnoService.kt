@@ -15,7 +15,7 @@ import kotlin.properties.Delegates.notNull
 class AutoTechnoService : MediaBrowserServiceCompat() {
 
     private var session: MediaSessionCompat by notNull()
-    private var lastMediaId by stringSharedPreference("pref_last_media_id", "")
+    private var lastMediaId by stringSharedPreference(PREF_LAST_MEDIA_ID, "")
     private val playerHolder by lazyAndroid { PlayerHolder(this, session) }
     private val audioFocusHolder by lazyAndroid { AudioFocusHolder(this) }
     private val connectedReceiver = ConnectedReceiver()

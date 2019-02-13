@@ -11,14 +11,14 @@ For more information:
 
 **NOTE: DI.FM Premium Required**.
 
-* Replace `insertlistenerkeyhere` in `PlayerHolder.kt` with your listener key.
 * Download Favorites in PLS from DI.FM.
 * Update `ChannelHelper.kt` with the channel ids from the PLS.
 * Make sure Android *and Android Auto* is set to allow apps from unknown sources. Use some internet search tool for instructions.
 * Deploy to Android Device.
     * If you're having problems, try to disable "Instant Run".
     * Running the default "Activity" will prompt you to open Android Auto. It should not crash.
-* Startup Android Auto.
+* Start the mobile app and enter your Premium listener key.
+* Startup Android Auto and open the app.
 
 
 Screenshots

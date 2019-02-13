@@ -15,6 +15,7 @@ import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import okhttp3.OkHttpClient
 import saschpe.exoplayer2.ext.icy.IcyHttpDataSourceFactory
 
@@ -31,6 +32,7 @@ class PlayerHolder(private val context: Context,
 
     fun startPlaying(channel: Channel) {
         val client = OkHttpClient.Builder().build()
+
         val icyHttpDataSourceFactory = IcyHttpDataSourceFactory.Builder(client)
                 .setIcyHeadersListener { icyHeaders ->
                     Log.d("AutoTechno", "onIcyHeaders: %s".format(icyHeaders.toString()))
@@ -55,9 +57,10 @@ class PlayerHolder(private val context: Context,
 
         val dataSourceFactory = DefaultDataSourceFactory(context, null, icyHttpDataSourceFactory)
 
+        val listenerKey = context.stringSharedPreference(PREF_LISTENER_KEY, "")
         val mediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
                 .setExtractorsFactory(DefaultExtractorsFactory())
-                .createMediaSource(Uri.parse("http://prem4.di.fm:80/${channel.mediaId}?insertlistenerkeyhere"))
+                .createMediaSource(Uri.parse("http://prem4.di.fm:80/${channel.mediaId}?$listenerKey"))
 
         requireNotNull(player).apply {
             prepare(mediaSource)
