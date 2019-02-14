@@ -22,6 +22,8 @@ import saschpe.exoplayer2.ext.icy.IcyHttpDataSourceFactory
 class PlayerHolder(private val context: Context,
                    private val session: MediaSessionCompat) : Player.EventListener {
 
+    private val listenerKey by context.stringSharedPreference(PREF_LISTENER_KEY, "")
+
     private var player: SimpleExoPlayer? = null
 
     fun createPlayer() {
@@ -57,7 +59,6 @@ class PlayerHolder(private val context: Context,
 
         val dataSourceFactory = DefaultDataSourceFactory(context, null, icyHttpDataSourceFactory)
 
-        val listenerKey = context.stringSharedPreference(PREF_LISTENER_KEY, "")
         val mediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
                 .setExtractorsFactory(DefaultExtractorsFactory())
                 .createMediaSource(Uri.parse("http://prem4.di.fm:80/${channel.mediaId}?$listenerKey"))
