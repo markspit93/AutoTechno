@@ -23,7 +23,6 @@ object ChannelHelper {
             val mediaDesc = MediaDescriptionCompat.Builder()
                     .setMediaId(it.mediaId)
                     .setTitle(it.title)
-                    .setSubtitle("DI.FM")
                     .setIconBitmap(BitmapFactory.decodeResource(context.resources, it.imageRes))
                     .build()
 

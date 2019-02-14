@@ -14,6 +14,12 @@ import kotlin.properties.Delegates.notNull
 
 class AutoTechnoService : MediaBrowserServiceCompat() {
 
+    companion object {
+        private const val CONTENT_STYLE_SUPPORTED = "android.media.browse.CONTENT_STYLE_SUPPORTED"
+        private const val CONTENT_STYLE_PLAYABLE_HINT = "android.media.browse.CONTENT_STYLE_PLAYABLE_HINT"
+        private const val CONTENT_STYLE_GRID_ITEM_HINT_VALUE = 2
+    }
+
     private var session: MediaSessionCompat by notNull()
     private var lastMediaId by stringSharedPreference(PREF_LAST_MEDIA_ID, "")
     private val playerHolder by lazyAndroid { PlayerHolder(this, session) }
@@ -42,7 +48,11 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
-        return BrowserRoot("root", null)
+        val extras = Bundle()
+        extras.putBoolean(CONTENT_STYLE_SUPPORTED, true)
+        extras.putInt(CONTENT_STYLE_PLAYABLE_HINT, CONTENT_STYLE_GRID_ITEM_HINT_VALUE)
+
+        return BrowserRoot("root", extras)
     }
 
     override fun onLoadChildren(parentMediaId: String, result: Result<List<MediaItem>>) {
