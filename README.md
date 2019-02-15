@@ -2,6 +2,8 @@
 Due to the limited amount of media apps which are available for Android Auto, I have decided to create one tailored to my music tastes.
 Auto Techno is an Android Auto music app for tuning in to DI.FM Premium radio channels.
 
+Play Store link: https://play.google.com/store/apps/details?id=io.github.markspit93.autotechno
+
 The app was a nice opportunity to experiment with Google's media playing library, Exo Player 2.
 For more information:
  * https://developer.android.com/guide/topics/media/exoplayer.html
