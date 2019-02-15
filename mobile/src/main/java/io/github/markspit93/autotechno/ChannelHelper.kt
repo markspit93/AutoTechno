@@ -23,7 +23,6 @@ object ChannelHelper {
             val mediaDesc = MediaDescriptionCompat.Builder()
                     .setMediaId(it.mediaId)
                     .setTitle(it.title)
-                    .setSubtitle("DI.FM")
                     .setIconBitmap(BitmapFactory.decodeResource(context.resources, it.imageRes))
                     .build()
 
@@ -61,5 +60,9 @@ object ChannelHelper {
                 channelList[it - 1].mediaId
             }
         }
+    }
+
+    fun searchForChannelMediaId(query: String): String? {
+        return channelList.find { it.title.contains(query, true) }?.mediaId
     }
 }

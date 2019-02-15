@@ -7,15 +7,21 @@ import android.content.IntentFilter
 import android.media.AudioManager
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
-import android.support.v4.media.MediaBrowserServiceCompat
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.media.MediaBrowserServiceCompat
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import kotlin.properties.Delegates.notNull
 
 class AutoTechnoService : MediaBrowserServiceCompat() {
 
+    companion object {
+        private const val CONTENT_STYLE_SUPPORTED = "android.media.browse.CONTENT_STYLE_SUPPORTED"
+        private const val CONTENT_STYLE_PLAYABLE_HINT = "android.media.browse.CONTENT_STYLE_PLAYABLE_HINT"
+        private const val CONTENT_STYLE_GRID_ITEM_HINT_VALUE = 2
+    }
+
     private var session: MediaSessionCompat by notNull()
-    private var lastMediaId by stringSharedPreference("pref_last_media_id", "")
+    private var lastMediaId by stringSharedPreference(PREF_LAST_MEDIA_ID, "")
     private val playerHolder by lazyAndroid { PlayerHolder(this, session) }
     private val audioFocusHolder by lazyAndroid { AudioFocusHolder(this) }
     private val connectedReceiver = ConnectedReceiver()
@@ -42,7 +48,11 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
-        return BrowserRoot("root", null)
+        val extras = Bundle()
+        extras.putBoolean(CONTENT_STYLE_SUPPORTED, true)
+        extras.putInt(CONTENT_STYLE_PLAYABLE_HINT, CONTENT_STYLE_GRID_ITEM_HINT_VALUE)
+
+        return BrowserRoot("root", extras)
     }
 
     override fun onLoadChildren(parentMediaId: String, result: Result<List<MediaItem>>) {
@@ -66,6 +76,20 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
         override fun onPlayFromMediaId(mediaId: String, extras: Bundle) {
             lastMediaId = mediaId
             play(lastMediaId)
+        }
+
+        override fun onPlayFromSearch(query: String?, extras: Bundle?) {
+            if (query.isNullOrEmpty()) {
+                play(lastMediaId)
+            }
+
+            val result = ChannelHelper.searchForChannelMediaId(query!!)
+
+            result?.let {
+                play(it)
+            } ?: run {
+                playerHolder.stopPlaying()
+            }
         }
 
         override fun onSkipToNext() {

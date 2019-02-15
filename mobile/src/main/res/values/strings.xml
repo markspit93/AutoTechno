@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Auto Techno</string>
-    <string name="desc">Connect your phone to an Android Auto compatible car.</string>
+    <string name="step1">Step 1</string>
+    <string name="step1_desc">Enter your DI.FM Premium listener key:</string>
+    <string name="step1_hint">Listener Key</string>
+    <string name="step2">Step 2</string>
+    <string name="step2_desc">Connect your phone to an Android Auto compatible car and open the app.</string>
 </resources>
