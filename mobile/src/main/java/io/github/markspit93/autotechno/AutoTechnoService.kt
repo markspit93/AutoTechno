@@ -78,6 +78,20 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
             play(lastMediaId)
         }
 
+        override fun onPlayFromSearch(query: String?, extras: Bundle?) {
+            if (query.isNullOrEmpty()) {
+                play(lastMediaId)
+            }
+
+            val result = ChannelHelper.searchForChannelMediaId(query!!)
+
+            result?.let {
+                play(it)
+            } ?: run {
+                playerHolder.stopPlaying()
+            }
+        }
+
         override fun onSkipToNext() {
             play(ChannelHelper.getNextMediaId(lastMediaId))
         }

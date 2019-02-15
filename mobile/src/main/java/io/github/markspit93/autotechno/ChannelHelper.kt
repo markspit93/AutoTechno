@@ -61,4 +61,8 @@ object ChannelHelper {
             }
         }
     }
+
+    fun searchForChannelMediaId(query: String): String? {
+        return channelList.find { it.title.contains(query, true) }?.mediaId
+    }
 }
