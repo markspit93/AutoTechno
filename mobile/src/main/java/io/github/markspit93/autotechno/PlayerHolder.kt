@@ -79,6 +79,16 @@ class PlayerHolder(private val context: Context,
                 .build())
     }
 
+    fun continuePlaying() {
+        requireNotNull(player).playWhenReady = true
+        setPlaybackState(PlaybackStateCompat.STATE_PLAYING)
+    }
+
+    fun pausePlaying() {
+        requireNotNull(player).playWhenReady = false
+        setPlaybackState(PlaybackStateCompat.STATE_PAUSED)
+    }
+
     fun stopPlaying() {
         requireNotNull(player).stop()
     }

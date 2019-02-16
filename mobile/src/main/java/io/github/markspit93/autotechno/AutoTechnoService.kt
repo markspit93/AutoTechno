@@ -4,7 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioFocusRequest
 import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
@@ -12,7 +14,7 @@ import androidx.media.MediaBrowserServiceCompat
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import kotlin.properties.Delegates.notNull
 
-class AutoTechnoService : MediaBrowserServiceCompat() {
+class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocusChangeListener {
 
     companion object {
         private const val CONTENT_STYLE_SUPPORTED = "android.media.browse.CONTENT_STYLE_SUPPORTED"
@@ -23,8 +25,12 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
     private var session: MediaSessionCompat by notNull()
     private var lastMediaId by stringSharedPreference(PREF_LAST_MEDIA_ID, "")
     private val playerHolder by lazyAndroid { PlayerHolder(this, session) }
-    private val audioFocusHolder by lazyAndroid { AudioFocusHolder(this) }
+
+    private val audioManager by lazyAndroid { getSystemService(Context.AUDIO_SERVICE) as AudioManager }
+    private var audioFocusRequest: AudioFocusRequest? = null
+
     private val connectedReceiver = ConnectedReceiver()
+    private val onAudioNoisyReceiver = OnAudioNoisyReceiver()
 
     override fun onCreate() {
         super.onCreate()
@@ -39,12 +45,7 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
         playerHolder.setMetaData(ChannelHelper.getChannelForId(lastMediaId))
 
         registerReceiver(connectedReceiver, IntentFilter("com.google.android.gms.car.media.STATUS"))
-    }
-
-    override fun onDestroy() {
-        unregisterReceiver(connectedReceiver)
-        playerHolder.releasePlayer()
-        session.release()
+        registerReceiver(onAudioNoisyReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
@@ -59,10 +60,46 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
         result.sendResult(ChannelHelper.createListing(this))
     }
 
+    override fun onAudioFocusChange(focusChange: Int) {
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_GAIN -> playerHolder.continuePlaying()
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> playerHolder.pausePlaying()
+        }
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(connectedReceiver)
+        unregisterReceiver(onAudioNoisyReceiver)
+        playerHolder.releasePlayer()
+        session.release()
+    }
+
+    private fun getAudioFocus(): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setOnAudioFocusChangeListener(this)
+                .setAcceptsDelayedFocusGain(false)
+                .build()
+
+            audioManager.requestAudioFocus(audioFocusRequest!!)
+        } else {
+            audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+        }
+    }
+
+    private fun abandonAudioFocus() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest?.let { audioManager.abandonAudioFocusRequest(it) }
+        } else {
+            audioManager.abandonAudioFocus(this)
+        }
+    }
+
+
     private inner class MediaSessionCallback : MediaSessionCompat.Callback() {
 
         private fun play(mediaId: String) {
-            if (audioFocusHolder.getAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            if (getAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 session.isActive = true
                 lastMediaId = mediaId
                 playerHolder.startPlaying(ChannelHelper.getChannelForId(mediaId))
@@ -105,7 +142,7 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
         }
 
         override fun onStop() {
-            audioFocusHolder.abandonAudioFocus()
+            abandonAudioFocus()
             session.isActive = false
             playerHolder.stopPlaying()
             stopSelf()
@@ -115,6 +152,14 @@ class AutoTechnoService : MediaBrowserServiceCompat() {
     private inner class ConnectedReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.getStringExtra("media_connection_status") != "media_connected") {
+                playerHolder.stopPlaying()
+            }
+        }
+    }
+
+    private inner class OnAudioNoisyReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (intent.action == AudioManager.ACTION_AUDIO_BECOMING_NOISY) {
                 playerHolder.stopPlaying()
             }
         }
