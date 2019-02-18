@@ -1,4 +1,4 @@
-package io.github.markspit93.autotechno
+package io.github.markspit93.autotechno.ui
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -15,6 +15,8 @@ import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import io.github.markspit93.autotechno.PREF_LISTENER_KEY
+import io.github.markspit93.autotechno.channel.Channel
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import okhttp3.OkHttpClient
 import saschpe.exoplayer2.ext.icy.IcyHttpDataSourceFactory
@@ -67,16 +69,6 @@ class PlayerHolder(private val context: Context,
             prepare(mediaSource)
             playWhenReady = true
         }
-
-        setMetaData(channel)
-    }
-
-    fun setMetaData(channel: Channel) {
-        session.setMetadata(MediaMetadataCompat.Builder()
-                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "DI.FM")
-                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "${channel.title} Channel")
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, BitmapFactory.decodeResource(context.resources, channel.imageRes))
-                .build())
     }
 
     fun continuePlaying() {

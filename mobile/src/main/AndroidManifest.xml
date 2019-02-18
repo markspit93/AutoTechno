@@ -22,7 +22,7 @@
             android:name="com.google.android.gms.car.notification.SmallIcon"
             android:resource="@mipmap/ic_launcher" />
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +37,7 @@
         </activity>
 
         <service
-            android:name=".AutoTechnoService"
+            android:name=".ui.AutoTechnoService"
             android:exported="true">
 
             <intent-filter>
