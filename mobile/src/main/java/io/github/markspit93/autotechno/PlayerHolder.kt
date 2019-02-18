@@ -81,12 +81,10 @@ class PlayerHolder(private val context: Context,
 
     fun continuePlaying() {
         requireNotNull(player).playWhenReady = true
-        setPlaybackState(PlaybackStateCompat.STATE_PLAYING)
     }
 
     fun pausePlaying() {
         requireNotNull(player).playWhenReady = false
-        setPlaybackState(PlaybackStateCompat.STATE_PAUSED)
     }
 
     fun stopPlaying() {
@@ -111,7 +109,13 @@ class PlayerHolder(private val context: Context,
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
         when (playbackState) {
-            Player.STATE_READY -> setPlaybackState(PlaybackStateCompat.STATE_PLAYING)
+            Player.STATE_READY -> {
+                if (playWhenReady) {
+                    setPlaybackState(PlaybackStateCompat.STATE_PLAYING)
+                } else {
+                    setPlaybackState(PlaybackStateCompat.STATE_PAUSED)
+                }
+            }
             Player.STATE_BUFFERING -> setPlaybackState(PlaybackStateCompat.STATE_BUFFERING)
             Player.STATE_ENDED -> setPlaybackState(PlaybackStateCompat.STATE_STOPPED)
             Player.STATE_IDLE -> setPlaybackState(PlaybackStateCompat.STATE_PAUSED)
