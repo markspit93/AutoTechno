@@ -17,7 +17,7 @@ object ChannelList {
     )
 
     fun getChannelsForStyle(category: String): List<Channel> =
-            when(category) {
+            when (category) {
                 CHANNEL_STYLE_CHILLOUT -> chilloutChannels
                 CHANNEL_STYLE_HOUSE -> houseChannels
                 CHANNEL_STYLE_TECHNO -> technoChannels
@@ -50,6 +50,16 @@ object ChannelList {
     )
 
     private val tranceChannels = listOf(
-            Channel("progressive", "Progressive", R.drawable.progressive)
+            Channel("classictrance", "Classic Trance", R.drawable.classictrance),
+            Channel("classicvocaltrance", "Classic Vocal Trance", R.drawable.classicvocaltrance),
+            Channel("darkpsytrance", "Dark Psy Trance", R.drawable.darkpsytrance),
+            Channel("djmixes", "DJ Mixes", R.drawable.djmixes),
+            Channel("epictrance", "Epic Trance", R.drawable.epictrance),
+            Channel("goapsy", "Goa-Psy Trance", R.drawable.goapsytrance),
+            Channel("handsup", "Hands Up", R.drawable.handsup),
+            Channel("progressive", "Progressive", R.drawable.progressive),
+            Channel("progressivepsy", "Progressive Psy", R.drawable.progressivepsy),
+            Channel("trance", "Trance", R.drawable.trance),
+            Channel("vocaltrance", "Vocal Trance", R.drawable.vocaltrance)
     )
 }
