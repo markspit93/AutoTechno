@@ -6,6 +6,7 @@ object ChannelList {
 
     private const val CHANNEL_STYLE_CHILLOUT = "Chillout"
     private const val CHANNEL_STYLE_EDM = "EDM"
+    private const val CHANNEL_STYLE_DANCE = "Dance"
     private const val CHANNEL_STYLE_HOUSE = "House"
     private const val CHANNEL_STYLE_TECHNO = "Techno"
     private const val CHANNEL_STYLE_TRANCE = "Trance"
@@ -13,6 +14,7 @@ object ChannelList {
     fun getStyles() = listOf(
             CHANNEL_STYLE_CHILLOUT,
             CHANNEL_STYLE_EDM,
+            CHANNEL_STYLE_DANCE,
             CHANNEL_STYLE_HOUSE,
             CHANNEL_STYLE_TECHNO,
             CHANNEL_STYLE_TRANCE
@@ -23,6 +25,7 @@ object ChannelList {
                 CHANNEL_STYLE_CHILLOUT -> chilloutChannels
                 CHANNEL_STYLE_EDM -> edmChannels
                 CHANNEL_STYLE_HOUSE -> houseChannels
+                CHANNEL_STYLE_DANCE -> danceChannels
                 CHANNEL_STYLE_TECHNO -> technoChannels
                 CHANNEL_STYLE_TRANCE -> tranceChannels
                 else -> emptyList()
@@ -49,6 +52,33 @@ object ChannelList {
             Channel("trap", "Trap", R.drawable.trap),
             Channel("trance", "Trance", R.drawable.trance),
             Channel("umfradio", "UMF Radio", R.drawable.umfradio),
+            Channel("vocaltrance", "Vocal Trance", R.drawable.vocaltrance)
+    )
+
+    private val danceChannels = listOf(
+            Channel("00sclubhits", "00s Club Hits", R.drawable.clubhits),
+            Channel("bassnjackinhouse", "Bass & Jackin' House", R.drawable.bassnjackinhouse),
+            Channel("bigroomhouse", "Big Room House", R.drawable.bigroomhouse),
+            Channel("chillntropicalhouse", "Chill & Tropical House", R.drawable.chilltropicalhouse),
+            Channel("classiceurodance", "Classic Eurodance", R.drawable.classiceurodance),
+            Channel("classiceurodisco", "Classic Eurodisco", R.drawable.classiceurodisco),
+            Channel("classicvocaltrance", "Classic Vocal Trance", R.drawable.classicvocaltrance),
+            Channel("club", "Club Sounds", R.drawable.clubsounds),
+            Channel("discohouse", "Disco House", R.drawable.discohouse),
+            Channel("djmixes", "DJ Mixes", R.drawable.djmixes),
+            Channel("edm", "EDM Hits", R.drawable.edmhits),
+            Channel("electrohouse", "Electro House", R.drawable.electrohouse),
+            Channel("electropop", "Electropop", R.drawable.electropop),
+            Channel("epictrance", "Epic Trance", R.drawable.epictrance),
+            Channel("eurodance", "Eurodance", R.drawable.eurodance),
+            Channel("handsup", "Hands Up", R.drawable.handsup),
+            Channel("harddance", "Hard Dance", R.drawable.harddance),
+            Channel("indiedance", "Indie Dance", R.drawable.indiedance),
+            Channel("mainstage", "Mainstage", R.drawable.mainstage),
+            Channel("nightcore", "Nightcore", R.drawable.nightcore),
+            Channel("nudisco", "Nu Disco", R.drawable.nudisco),
+            Channel("russianclubhits", "Russian Club Hits", R.drawable.russianclubhits),
+            Channel("trance", "Trance", R.drawable.trance),
             Channel("vocaltrance", "Vocal Trance", R.drawable.vocaltrance)
     )
 

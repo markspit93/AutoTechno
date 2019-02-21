@@ -60,7 +60,7 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
         val extras = Bundle()
         extras.putBoolean(CONTENT_STYLE_SUPPORTED, true)
         extras.putInt(CONTENT_STYLE_BROWSABLE_HINT, CONTENT_STYLE_LIST_ITEM_HINT_VALUE)
-        extras.putInt(CONTENT_STYLE_PLAYABLE_HINT, CONTENT_STYLE_GRID_ITEM_HINT_VALUE)
+        extras.putInt(CONTENT_STYLE_PLAYABLE_HINT, CONTENT_STYLE_LIST_ITEM_HINT_VALUE)
 
         return BrowserRoot(ROOT_ID, extras)
     }
