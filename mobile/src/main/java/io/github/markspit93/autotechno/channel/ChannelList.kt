@@ -83,7 +83,36 @@ object ChannelList {
     )
 
     private val houseChannels = listOf(
-            Channel("house", "House", R.drawable.house)
+            Channel("house", "House", R.drawable.house),
+            Channel("vocalhouse", "Vocal House", R.drawable.vocalhouse),
+            Channel("soulfulhouse", "Soulful House", R.drawable.soulfulhouse),
+            Channel("nudisco", "Nu Disco", R.drawable.nudisco),
+            Channel("deephouse", "Deep House", R.drawable.deephouse),
+            Channel("techhouse", "Tech House", R.drawable.tech_house),
+            Channel("electrohouse", "Electro House", R.drawable.electrohouse),
+            Channel("edm", "EDM Hits", R.drawable.edmhits),
+            Channel("bigroomhouse", "Big Room House", R.drawable.bigroomhouse),
+            Channel("bassnjackinhouse", "Bass & Jackin' House", R.drawable.bassnjackinhouse),
+            Channel("bassline", "Bassline", R.drawable.bassline),
+            Channel("00sclubhits", "00s Club Hits", R.drawable.clubhits),
+            Channel("discohouse", "Disco House", R.drawable.discohouse),
+            Channel("jazzhouse", "Jazz House", R.drawable.jazzhouse),
+            Channel("oldschoolhouse", "Oldschool House", R.drawable.oldschoolhouse),
+            Channel("electroswing", "Electroswing", R.drawable.electroswing),
+            Channel("funkyhouse", "Funky House", R.drawable.funkyhouse),
+            Channel("detroithousentechno", "Detroit House & Techno", R.drawable.detroit_house_techno),
+            Channel("latinhouse", "Latin House", R.drawable.latinhouse),
+            Channel("tribalhouse", "Tribal House", R.drawable.tribalhouse),
+            Channel("progressive", "Progressive", R.drawable.progressive),
+            Channel("mainstage", "Mainstage", R.drawable.mainstage),
+            Channel("melodicprogressive", "Melodic Progressive", R.drawable.melodicprogressive),
+            Channel("electropop", "Electropop", R.drawable.electropop),
+            Channel("deepnudisco", "Deep Nu-Disco", R.drawable.deepnudisco),
+            Channel("deeptech", "Deep Tech", R.drawable.deeptech),
+            Channel("downtempolounge", "Downtempo Lounge", R.drawable.downtempolounge),
+            Channel("chillntropicalhouse", "Chill & Tropical House", R.drawable.chilltropicalhouse),
+            Channel("djmixes", "DJ Mixes", R.drawable.djmixes),
+            Channel("oldschoolacid", "Oldschool Acid", R.drawable.oldschoolacid)
     )
 
     private val technoChannels = listOf(
