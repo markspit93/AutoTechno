@@ -36,7 +36,25 @@ object ChannelList {
 
     private val chilloutChannels = listOf(
             Channel("ambient", "Ambient", R.drawable.ambient),
-            Channel("chillout", "Chillout", R.drawable.chillout)
+            Channel("chillout", "Chillout", R.drawable.chillout),
+            Channel("chilloutdreams", "Chillout Dreams", R.drawable.chilloutdreams),
+            Channel("chillstep", "Chillstep", R.drawable.chillstep),
+            Channel("chillhop", "Chillhop", R.drawable.chillhop),
+            Channel("chillntropicalhouse", "Chill & Tropical House", R.drawable.chilltropicalhouse),
+            Channel("deephouse", "Deep House", R.drawable.deephouse),
+            Channel("deepnudisco", "Deep Nu-Disco", R.drawable.deepnudisco),
+            Channel("downtempolounge", "Downtempo Lounge", R.drawable.downtempolounge),
+            Channel("dubtechno", "Dub Techno", R.drawable.dubtechno),
+            Channel("electronicpioneers", "Electronic Pioneers", R.drawable.electronicpioneers),
+            Channel("futuregarage", "Future Garage", R.drawable.futuregarage),
+            Channel("indiebeats", "Indie Beats", R.drawable.indiebeats),
+            Channel("lofihiphop", "Lofi Hip-Hop", R.drawable.lofihophop),
+            Channel("lounge", "Lounge", R.drawable.lounge),
+            Channel("melodicprogressive", "Melodic Progressive", R.drawable.melodicprogressive),
+            Channel("spacemusic", "Space Dreams", R.drawable.spacedreams),
+            Channel("psybient", "Psybient", R.drawable.psybient),
+            Channel("psychill", "Psychill", R.drawable.psychill),
+            Channel("vocalchillout", "Vocal Chillout", R.drawable.vocalchillout)
     )
 
     private val edmChannels = listOf(
