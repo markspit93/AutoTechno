@@ -8,6 +8,7 @@ object ChannelList {
     private const val CHANNEL_STYLE_EDM = "EDM"
     private const val CHANNEL_STYLE_DANCE = "Dance"
     private const val CHANNEL_STYLE_HOUSE = "House"
+    private const val CHANNEL_STYLE_LOUNGE = "Lounge"
     private const val CHANNEL_STYLE_TECHNO = "Techno"
     private const val CHANNEL_STYLE_TRANCE = "Trance"
 
@@ -16,6 +17,7 @@ object ChannelList {
             CHANNEL_STYLE_EDM,
             CHANNEL_STYLE_DANCE,
             CHANNEL_STYLE_HOUSE,
+            CHANNEL_STYLE_LOUNGE,
             CHANNEL_STYLE_TECHNO,
             CHANNEL_STYLE_TRANCE
     )
@@ -26,6 +28,7 @@ object ChannelList {
                 CHANNEL_STYLE_EDM -> edmChannels
                 CHANNEL_STYLE_HOUSE -> houseChannels
                 CHANNEL_STYLE_DANCE -> danceChannels
+                CHANNEL_STYLE_LOUNGE -> loungeChannels
                 CHANNEL_STYLE_TECHNO -> technoChannels
                 CHANNEL_STYLE_TRANCE -> tranceChannels
                 else -> emptyList()
@@ -83,36 +86,61 @@ object ChannelList {
     )
 
     private val houseChannels = listOf(
-            Channel("house", "House", R.drawable.house),
-            Channel("vocalhouse", "Vocal House", R.drawable.vocalhouse),
-            Channel("soulfulhouse", "Soulful House", R.drawable.soulfulhouse),
-            Channel("nudisco", "Nu Disco", R.drawable.nudisco),
-            Channel("deephouse", "Deep House", R.drawable.deephouse),
-            Channel("techhouse", "Tech House", R.drawable.tech_house),
-            Channel("electrohouse", "Electro House", R.drawable.electrohouse),
-            Channel("edm", "EDM Hits", R.drawable.edmhits),
-            Channel("bigroomhouse", "Big Room House", R.drawable.bigroomhouse),
-            Channel("bassnjackinhouse", "Bass & Jackin' House", R.drawable.bassnjackinhouse),
             Channel("bassline", "Bassline", R.drawable.bassline),
+            Channel("bassnjackinhouse", "Bass & Jackin' House", R.drawable.bassnjackinhouse),
+            Channel("bigroomhouse", "Big Room House", R.drawable.bigroomhouse),
             Channel("00sclubhits", "00s Club Hits", R.drawable.clubhits),
-            Channel("discohouse", "Disco House", R.drawable.discohouse),
-            Channel("jazzhouse", "Jazz House", R.drawable.jazzhouse),
-            Channel("oldschoolhouse", "Oldschool House", R.drawable.oldschoolhouse),
-            Channel("electroswing", "Electroswing", R.drawable.electroswing),
-            Channel("funkyhouse", "Funky House", R.drawable.funkyhouse),
-            Channel("detroithousentechno", "Detroit House & Techno", R.drawable.detroit_house_techno),
-            Channel("latinhouse", "Latin House", R.drawable.latinhouse),
-            Channel("tribalhouse", "Tribal House", R.drawable.tribalhouse),
-            Channel("progressive", "Progressive", R.drawable.progressive),
-            Channel("mainstage", "Mainstage", R.drawable.mainstage),
-            Channel("melodicprogressive", "Melodic Progressive", R.drawable.melodicprogressive),
-            Channel("electropop", "Electropop", R.drawable.electropop),
+            Channel("chillntropicalhouse", "Chill & Tropical House", R.drawable.chilltropicalhouse),
+            Channel("deephouse", "Deep House", R.drawable.deephouse),
             Channel("deepnudisco", "Deep Nu-Disco", R.drawable.deepnudisco),
             Channel("deeptech", "Deep Tech", R.drawable.deeptech),
-            Channel("downtempolounge", "Downtempo Lounge", R.drawable.downtempolounge),
-            Channel("chillntropicalhouse", "Chill & Tropical House", R.drawable.chilltropicalhouse),
+            Channel("detroithousentechno", "Detroit House & Techno", R.drawable.detroit_house_techno),
+            Channel("discohouse", "Disco House", R.drawable.discohouse),
             Channel("djmixes", "DJ Mixes", R.drawable.djmixes),
-            Channel("oldschoolacid", "Oldschool Acid", R.drawable.oldschoolacid)
+            Channel("downtempolounge", "Downtempo Lounge", R.drawable.downtempolounge),
+            Channel("edm", "EDM Hits", R.drawable.edmhits),
+            Channel("electrohouse", "Electro House", R.drawable.electrohouse),
+            Channel("electropop", "Electropop", R.drawable.electropop),
+            Channel("electroswing", "Electroswing", R.drawable.electroswing),
+            Channel("funkyhouse", "Funky House", R.drawable.funkyhouse),
+            Channel("house", "House", R.drawable.house),
+            Channel("jazzhouse", "Jazz House", R.drawable.jazzhouse),
+            Channel("latinhouse", "Latin House", R.drawable.latinhouse),
+            Channel("mainstage", "Mainstage", R.drawable.mainstage),
+            Channel("melodicprogressive", "Melodic Progressive", R.drawable.melodicprogressive),
+            Channel("nudisco", "Nu Disco", R.drawable.nudisco),
+            Channel("oldschoolacid", "Oldschool Acid", R.drawable.oldschoolacid),
+            Channel("oldschoolhouse", "Oldschool House", R.drawable.oldschoolhouse),
+            Channel("progressive", "Progressive", R.drawable.progressive),
+            Channel("soulfulhouse", "Soulful House", R.drawable.soulfulhouse),
+            Channel("techhouse", "Tech House", R.drawable.tech_house),
+            Channel("tribalhouse", "Tribal House", R.drawable.tribalhouse),
+            Channel("vocalhouse", "Vocal House", R.drawable.vocalhouse)
+    )
+
+    private val loungeChannels = listOf(
+            Channel("chillhop", "Chillhop", R.drawable.chillhop),
+            Channel("chillntropicalhouse", "Chill & Tropical House", R.drawable.chilltropicalhouse),
+            Channel("chillout", "Chillout", R.drawable.chillout),
+            Channel("chilloutdreams", "Chillout Dreams", R.drawable.chilloutdreams),
+            Channel("chillstep", "Chillstep", R.drawable.chillstep),
+            Channel("deephouse", "Deep House", R.drawable.deephouse),
+            Channel("deepnudisco", "Deep Nu-Disco", R.drawable.deepnudisco),
+            Channel("downtempolounge", "Downtempo Lounge", R.drawable.downtempolounge),
+            Channel("funkyhouse", "Funky House", R.drawable.funkyhouse),
+            Channel("futurebass", "Future Bass", R.drawable.futurebass),
+            Channel("futuregarage", "Future Garage", R.drawable.futuregarage),
+            Channel("indiedance", "Indie Dance", R.drawable.indiedance),
+            Channel("jazzhouse", "Jazz House", R.drawable.jazzhouse),
+            Channel("liquiddnb", "Liquid DNB", R.drawable.liquiddnb),
+            Channel("liquiddubstep", "Liquid Dubstep", R.drawable.liquiddubstep),
+            Channel("liquidtrap", "Liquid Trap", R.drawable.liquidtrap),
+            Channel("lofihiphop", "Lofi Hip-Hop", R.drawable.lofihophop),
+            Channel("lounge", "Lounge", R.drawable.lounge),
+            Channel("melodicprogressive", "Melodic Progressive", R.drawable.melodicprogressive),
+            Channel("nudisco", "Nu Disco", R.drawable.nudisco),
+            Channel("soulfulhouse", "Soulful House", R.drawable.soulfulhouse),
+            Channel("vocallounge", "Vocal Lounge", R.drawable.vocallounge)
     )
 
     private val technoChannels = listOf(
