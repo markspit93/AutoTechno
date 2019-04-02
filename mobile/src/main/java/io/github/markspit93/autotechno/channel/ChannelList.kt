@@ -7,6 +7,7 @@ object ChannelList {
     private const val CHANNEL_STYLE_AMBIENT = "Ambient"
     private const val CHANNEL_STYLE_BASS = "Bass"
     private const val CHANNEL_STYLE_CHILLOUT = "Chillout"
+    private const val CHANNEL_STYLE_CLASSIC = "Classic"
     private const val CHANNEL_STYLE_DANCE = "Dance"
     private const val CHANNEL_STYLE_DEEP = "Deep"
     private const val CHANNEL_STYLE_EDM = "EDM"
@@ -19,6 +20,7 @@ object ChannelList {
             CHANNEL_STYLE_AMBIENT,
             CHANNEL_STYLE_BASS,
             CHANNEL_STYLE_CHILLOUT,
+            CHANNEL_STYLE_CLASSIC,
             CHANNEL_STYLE_EDM,
             CHANNEL_STYLE_DANCE,
             CHANNEL_STYLE_DEEP,
@@ -33,6 +35,7 @@ object ChannelList {
                 CHANNEL_STYLE_AMBIENT -> ambientChannels
                 CHANNEL_STYLE_BASS -> bassChannels
                 CHANNEL_STYLE_CHILLOUT -> chilloutChannels
+                CHANNEL_STYLE_CLASSIC -> classicChannels
                 CHANNEL_STYLE_EDM -> edmChannels
                 CHANNEL_STYLE_HOUSE -> houseChannels
                 CHANNEL_STYLE_DANCE -> danceChannels
@@ -100,6 +103,21 @@ object ChannelList {
             Channel("psybient", "Psybient", R.drawable.psybient),
             Channel("psychill", "Psychill", R.drawable.psychill),
             Channel("vocalchillout", "Vocal Chillout", R.drawable.vocalchillout)
+    )
+
+    private val classicChannels = listOf(
+            Channel("00sclubhits", "00s Club Hits", R.drawable.clubhits),
+            Channel("classiceurodance", "Classic Eurodance", R.drawable.classiceurodance),
+            Channel("classiceurodisco", "Classic Eurodisco", R.drawable.classiceurodisco),
+            Channel("classictrance", "Classic Trance", R.drawable.classictrance),
+            Channel("classicvocaltrance", "Classic Vocal Trance", R.drawable.classicvocaltrance),
+            Channel("detroithousentechno", "Detroit House & Techno", R.drawable.detroit_house_techno),
+            Channel("electronicpioneers", "Electronic Pioneers", R.drawable.electronicpioneers),
+            Channel("jungle", "Jungle", R.drawable.jungle),
+            Channel("oldschoolacid", "Oldschool Acid", R.drawable.oldschoolacid),
+            Channel("oldschoolhouse", "Oldschool House", R.drawable.oldschoolhouse),
+            Channel("oldschoolrave", "Oldschool Rave", R.drawable.oldschoolrave),
+            Channel("classicelectronica", "Oldschool Techno & Trance", R.drawable.oldschooltechno)
     )
 
     private val edmChannels = listOf(
