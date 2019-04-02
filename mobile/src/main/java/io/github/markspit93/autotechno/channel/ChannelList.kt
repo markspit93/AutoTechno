@@ -13,6 +13,7 @@ object ChannelList {
     private const val CHANNEL_STYLE_EDM = "EDM"
     private const val CHANNEL_STYLE_HOUSE = "House"
     private const val CHANNEL_STYLE_LOUNGE = "Lounge"
+    private const val CHANNEL_STYLE_SYNTH = "Synth"
     private const val CHANNEL_STYLE_TECHNO = "Techno"
     private const val CHANNEL_STYLE_TRANCE = "Trance"
     private const val CHANNEL_STYLE_VOCAL = "Vocal"
@@ -27,6 +28,7 @@ object ChannelList {
             CHANNEL_STYLE_DEEP,
             CHANNEL_STYLE_HOUSE,
             CHANNEL_STYLE_LOUNGE,
+            CHANNEL_STYLE_SYNTH,
             CHANNEL_STYLE_TECHNO,
             CHANNEL_STYLE_TRANCE,
             CHANNEL_STYLE_VOCAL
@@ -43,6 +45,7 @@ object ChannelList {
                 CHANNEL_STYLE_DANCE -> danceChannels
                 CHANNEL_STYLE_DEEP -> deepChannels
                 CHANNEL_STYLE_LOUNGE -> loungeChannels
+                CHANNEL_STYLE_SYNTH -> synthChannels
                 CHANNEL_STYLE_TECHNO -> technoChannels
                 CHANNEL_STYLE_TRANCE -> tranceChannels
                 CHANNEL_STYLE_VOCAL -> vocalChannels
@@ -233,6 +236,13 @@ object ChannelList {
             Channel("nudisco", "Nu Disco", R.drawable.nudisco),
             Channel("soulfulhouse", "Soulful House", R.drawable.soulfulhouse),
             Channel("vocallounge", "Vocal Lounge", R.drawable.vocallounge)
+    )
+
+    private val synthChannels = listOf(
+            Channel("electronicpioneers", "Electronic Pioneers", R.drawable.electronicpioneers),
+            Channel("futuresynthpop", "Future Synthpop", R.drawable.futuresynthwave),
+            Channel("indiedance", "Indie Dance", R.drawable.indiedance),
+            Channel("synthwave", "Synthwave", R.drawable.synthwave)
     )
 
     private val technoChannels = listOf(
