@@ -11,6 +11,7 @@ object ChannelList {
     private const val CHANNEL_STYLE_DANCE = "Dance"
     private const val CHANNEL_STYLE_DEEP = "Deep"
     private const val CHANNEL_STYLE_EDM = "EDM"
+    private const val CHANNEL_STYLE_HARD = "Hard"
     private const val CHANNEL_STYLE_HOUSE = "House"
     private const val CHANNEL_STYLE_LOUNGE = "Lounge"
     private const val CHANNEL_STYLE_SYNTH = "Synth"
@@ -26,6 +27,7 @@ object ChannelList {
             CHANNEL_STYLE_EDM,
             CHANNEL_STYLE_DANCE,
             CHANNEL_STYLE_DEEP,
+            CHANNEL_STYLE_HARD,
             CHANNEL_STYLE_HOUSE,
             CHANNEL_STYLE_LOUNGE,
             CHANNEL_STYLE_SYNTH,
@@ -41,6 +43,7 @@ object ChannelList {
                 CHANNEL_STYLE_CHILLOUT -> chilloutChannels
                 CHANNEL_STYLE_CLASSIC -> classicChannels
                 CHANNEL_STYLE_EDM -> edmChannels
+                CHANNEL_STYLE_HARD -> hardChannels
                 CHANNEL_STYLE_HOUSE -> houseChannels
                 CHANNEL_STYLE_DANCE -> danceChannels
                 CHANNEL_STYLE_DEEP -> deepChannels
@@ -178,6 +181,27 @@ object ChannelList {
             Channel("deeptech", "Deep Tech", R.drawable.deeptech),
             Channel("dub", "Dub", R.drawable.dub),
             Channel("dubtechno", "Dub Techno", R.drawable.dubtechno)
+    )
+
+    private val hardChannels = listOf(
+            Channel("bigroomhouse", "Big Room House", R.drawable.bigroomhouse),
+            Channel("clubdubstep", "Club Dubstep", R.drawable.clubdubstep),
+            Channel("darkdnb", "Dark DNB", R.drawable.darkdnb),
+            Channel("darkpsytrance", "Dark Psy Trance", R.drawable.darkpsytrance),
+            Channel("dubstep", "Dubstep", R.drawable.dubstep),
+            Channel("edm", "EDM Hits", R.drawable.edmhits),
+            Channel("gabber", "Gabber", R.drawable.gabber),
+            Channel("goapsy", "Goa-Psy Trance", R.drawable.goapsytrance),
+            Channel("hardcore", "Hardcore", R.drawable.hardcore),
+            Channel("harddance", "Hard Dance", R.drawable.harddance),
+            Channel("hardstyle", "Hardstyle", R.drawable.hardstyle),
+            Channel("jungle", "Jungle", R.drawable.jungle),
+            Channel("nightcore", "Nightcore", R.drawable.nightcore),
+            Channel("hardtechno", "Hard Techno", R.drawable.hardtechno),
+            Channel("oldschoolacid", "Oldschool Acid", R.drawable.oldschoolacid),
+            Channel("oldschoolrave", "Oldschool Rave", R.drawable.oldschoolrave),
+            Channel("techno", "Techno", R.drawable.techno),
+            Channel("trap", "Trap", R.drawable.trap)
     )
 
     private val houseChannels = listOf(
