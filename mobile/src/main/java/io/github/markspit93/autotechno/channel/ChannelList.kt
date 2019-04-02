@@ -4,6 +4,7 @@ import io.github.markspit93.autotechno.R
 
 object ChannelList {
 
+    private const val CHANNEL_STYLE_BASS = "Bass"
     private const val CHANNEL_STYLE_CHILLOUT = "Chillout"
     private const val CHANNEL_STYLE_EDM = "EDM"
     private const val CHANNEL_STYLE_DANCE = "Dance"
@@ -13,6 +14,7 @@ object ChannelList {
     private const val CHANNEL_STYLE_TRANCE = "Trance"
 
     fun getStyles() = listOf(
+            CHANNEL_STYLE_BASS,
             CHANNEL_STYLE_CHILLOUT,
             CHANNEL_STYLE_EDM,
             CHANNEL_STYLE_DANCE,
@@ -24,6 +26,7 @@ object ChannelList {
 
     fun getChannelsForStyle(category: String): List<Channel> =
             when (category) {
+                CHANNEL_STYLE_BASS -> bassChannels
                 CHANNEL_STYLE_CHILLOUT -> chilloutChannels
                 CHANNEL_STYLE_EDM -> edmChannels
                 CHANNEL_STYLE_HOUSE -> houseChannels
@@ -188,5 +191,30 @@ object ChannelList {
             Channel("progressivepsy", "Progressive Psy", R.drawable.progressivepsy),
             Channel("trance", "Trance", R.drawable.trance),
             Channel("vocaltrance", "Vocal Trance", R.drawable.vocaltrance)
+    )
+
+    private val bassChannels = listOf(
+            Channel("atmosphericbreaks", "Atmospheric Breaks", R.drawable.atmposphericbreaks),
+            Channel("bassline", "Bassline", R.drawable.bassline),
+            Channel("bassnjackinhouse", "Bass & Jackin' House", R.drawable.bassnjackinhouse),
+            Channel("bigbeat", "Big Beat", R.drawable.bigbeat),
+            Channel("breaks", "Breaks", R.drawable.breaks),
+            Channel("chillstep", "Chillstep", R.drawable.chillstep),
+            Channel("clubdubstep", "Club Dubstep", R.drawable.clubdubstep),
+            Channel("darkdnb", "Dark DNB", R.drawable.darkdnb),
+            Channel("drumandbass", "Drum and Bass", R.drawable.drumandbass),
+            Channel("drumstep", "Drumstep", R.drawable.drumstep),
+            Channel("dub", "Dub", R.drawable.dub),
+            Channel("dubstep", "Dubstep", R.drawable.dubstep),
+            Channel("edm", "EDM Hits", R.drawable.edmhits),
+            Channel("futurebass", "Future Bass", R.drawable.futurebass),
+            Channel("futuregarage", "Future Garage", R.drawable.futuregarage),
+            Channel("glitchhop", "Glitch Hop", R.drawable.glitchhop),
+            Channel("jungle", "Jungle", R.drawable.jungle),
+            Channel("liquiddnb", "Liquid DNB", R.drawable.liquiddnb),
+            Channel("liquiddubstep", "Liquid Dubstep", R.drawable.liquiddubstep),
+            Channel("liquidtrap", "Liquid Trap", R.drawable.liquidtrap),
+            Channel("mainstage", "Mainstage", R.drawable.mainstage),
+            Channel("trap", "Trap", R.drawable.trap)
     )
 }
