@@ -1,4 +1,4 @@
-package io.github.markspit93.autotechno
+package io.github.markspit93.autotechno.ui
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,7 +10,11 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
+import io.github.markspit93.autotechno.PREF_LAST_MEDIA_ID
+import io.github.markspit93.autotechno.channel.ChannelHelper
+import io.github.markspit93.autotechno.lazyAndroid
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import kotlin.properties.Delegates.notNull
 
@@ -18,8 +22,13 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
 
     companion object {
         private const val CONTENT_STYLE_SUPPORTED = "android.media.browse.CONTENT_STYLE_SUPPORTED"
+        private const val CONTENT_STYLE_BROWSABLE_HINT  = "android.media.browse.CONTENT_STYLE_BROWSABLE_HINT"
         private const val CONTENT_STYLE_PLAYABLE_HINT = "android.media.browse.CONTENT_STYLE_PLAYABLE_HINT"
+
+        private const val CONTENT_STYLE_LIST_ITEM_HINT_VALUE = 1
         private const val CONTENT_STYLE_GRID_ITEM_HINT_VALUE = 2
+
+        private const val ROOT_ID = "root"
     }
 
     private var session: MediaSessionCompat by notNull()
@@ -42,7 +51,6 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
         session.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
 
         playerHolder.createPlayer()
-        playerHolder.setMetaData(ChannelHelper.getChannelForId(lastMediaId))
 
         registerReceiver(connectedReceiver, IntentFilter("com.google.android.gms.car.media.STATUS"))
         registerReceiver(onAudioNoisyReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
@@ -51,13 +59,18 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
         val extras = Bundle()
         extras.putBoolean(CONTENT_STYLE_SUPPORTED, true)
-        extras.putInt(CONTENT_STYLE_PLAYABLE_HINT, CONTENT_STYLE_GRID_ITEM_HINT_VALUE)
+        extras.putInt(CONTENT_STYLE_BROWSABLE_HINT, CONTENT_STYLE_LIST_ITEM_HINT_VALUE)
+        extras.putInt(CONTENT_STYLE_PLAYABLE_HINT, CONTENT_STYLE_LIST_ITEM_HINT_VALUE)
 
-        return BrowserRoot("root", extras)
+        return BrowserRoot(ROOT_ID, extras)
     }
 
     override fun onLoadChildren(parentMediaId: String, result: Result<List<MediaItem>>) {
-        result.sendResult(ChannelHelper.createListing(this))
+        if (parentMediaId == ROOT_ID) {
+            result.sendResult(ChannelHelper.createBrowsableListing())
+        } else {
+            result.sendResult(ChannelHelper.createChildrenListing(this, parentMediaId))
+        }
     }
 
     override fun onAudioFocusChange(focusChange: Int) {

@@ -1,4 +1,4 @@
-package io.github.markspit93.autotechno
+package io.github.markspit93.autotechno.channel
 
 data class Channel(
         val mediaId: String,

@@ -1,9 +1,11 @@
-package io.github.markspit93.autotechno
+package io.github.markspit93.autotechno.ui
 
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
+import io.github.markspit93.autotechno.PREF_LISTENER_KEY
+import io.github.markspit93.autotechno.R
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import kotlinx.android.synthetic.main.activity_main.*
 
