@@ -10,11 +10,11 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
-import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
-import io.github.markspit93.autotechno.PREF_LAST_MEDIA_ID
+import io.github.markspit93.autotechno.*
+import io.github.markspit93.autotechno.channel.Channel
 import io.github.markspit93.autotechno.channel.ChannelHelper
-import io.github.markspit93.autotechno.lazyAndroid
+import io.github.markspit93.autotechno.room.AutoTechnoDatabase
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import kotlin.properties.Delegates.notNull
 
@@ -41,6 +41,9 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
     private val connectedReceiver = ConnectedReceiver()
     private val onAudioNoisyReceiver = OnAudioNoisyReceiver()
 
+    private val database by lazyAndroid {AutoTechnoDatabase.getInstance(this) }
+    private val favoriteChannels by lazyAndroid { database.favoriteDao().loadFavorites().toMutableList() }
+
     override fun onCreate() {
         super.onCreate()
 
@@ -66,10 +69,10 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
     }
 
     override fun onLoadChildren(parentMediaId: String, result: Result<List<MediaItem>>) {
-        if (parentMediaId == ROOT_ID) {
-            result.sendResult(ChannelHelper.createBrowsableListing())
-        } else {
-            result.sendResult(ChannelHelper.createChildrenListing(this, parentMediaId))
+        when (parentMediaId) {
+            ROOT_ID -> result.sendResult(ChannelHelper.createBrowsableListing(this))
+            MEDIA_ID_FAVORITES -> result.sendResult(ChannelHelper.createFavoriteListing(this, favoriteChannels))
+            else -> result.sendResult(ChannelHelper.createChildrenListing(this, parentMediaId))
         }
     }
 
@@ -87,6 +90,7 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
         session.release()
     }
 
+    @Suppress("DEPRECATION")
     private fun getAudioFocus(): Int {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
@@ -100,6 +104,7 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun abandonAudioFocus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioFocusRequest?.let { audioManager.abandonAudioFocusRequest(it) }
@@ -107,7 +112,6 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
             audioManager.abandonAudioFocus(this)
         }
     }
-
 
     private inner class MediaSessionCallback : MediaSessionCompat.Callback() {
 
@@ -159,6 +163,20 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
             session.isActive = false
             playerHolder.stopPlaying()
             stopSelf()
+        }
+
+        override fun onCustomAction(action: String?, extras: Bundle?) {
+            if (action == CUSTOM_ACTION_FAVORITE) {
+                val channel: Channel = extras!!.getParcelable(EXTRA_CHANNEL)!!
+
+                if (favoriteChannels.contains(channel)) {
+                    favoriteChannels.remove(channel)
+                    database.favoriteDao().deleteFavorite(channel)
+                } else {
+                    favoriteChannels.add(channel)
+                    database.favoriteDao().insertFavorite(channel)
+                }
+            }
         }
     }
 

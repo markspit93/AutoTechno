@@ -7,19 +7,20 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
-import android.util.Log
+import androidx.core.os.bundleOf
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.metadata.MetadataOutput
+import com.google.android.exoplayer2.metadata.icy.IcyInfo
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import io.github.markspit93.autotechno.PREF_LISTENER_KEY
+import com.google.android.exoplayer2.util.Util
+import io.github.markspit93.autotechno.*
+import io.github.markspit93.autotechno.R
 import io.github.markspit93.autotechno.channel.Channel
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
-import okhttp3.OkHttpClient
-import saschpe.exoplayer2.ext.icy.IcyHttpDataSourceFactory
 
 class PlayerHolder(private val context: Context,
                    private val session: MediaSessionCompat) : Player.EventListener {
@@ -27,6 +28,7 @@ class PlayerHolder(private val context: Context,
     private val listenerKey by context.stringSharedPreference(PREF_LISTENER_KEY, "")
 
     private var player: SimpleExoPlayer? = null
+    private var channel: Channel? = null
 
     fun createPlayer() {
         setPlaybackState(STATE_STOPPED)
@@ -35,16 +37,13 @@ class PlayerHolder(private val context: Context,
     }
 
     fun startPlaying(channel: Channel) {
-        val client = OkHttpClient.Builder().build()
+        this.channel = channel
 
-        val icyHttpDataSourceFactory = IcyHttpDataSourceFactory.Builder(client)
-                .setIcyHeadersListener { icyHeaders ->
-                    Log.d("AutoTechno", "onIcyHeaders: %s".format(icyHeaders.toString()))
-                }
-                .setIcyMetadataChangeListener { icyMetadata ->
-                    Log.d("AutoTechno", "onIcyMetaData: %s".format(icyMetadata.toString()))
-
-                    val artistTitle = icyMetadata.streamTitle.split(" - ")
+        val metadataOutput = MetadataOutput { metadata ->
+            for (i in 0 until metadata.length()) {
+                val entry = metadata.get(i)
+                if (entry is IcyInfo) {
+                    val artistTitle = entry.title!!.split(" - ")
                     val artist = artistTitle.getOrNull(0) ?: ""
                     val title = artistTitle.getOrNull(1) ?: ""
 
@@ -56,16 +55,20 @@ class PlayerHolder(private val context: Context,
                                     BitmapFactory.decodeResource(context.resources, channel.imageRes))
                             .build()
                     )
+
+                    return@MetadataOutput
                 }
-                .build()
+            }
+        }
 
-        val dataSourceFactory = DefaultDataSourceFactory(context, null, icyHttpDataSourceFactory)
+        val userAgent = Util.getUserAgent(context, "AutoTechno")
 
-        val mediaSource = ExtractorMediaSource.Factory(dataSourceFactory)
-                .setExtractorsFactory(DefaultExtractorsFactory())
+        val mediaSource = ProgressiveMediaSource
+                .Factory(DefaultDataSourceFactory(context, userAgent))
                 .createMediaSource(Uri.parse("http://prem4.di.fm:80/${channel.mediaId}?$listenerKey"))
 
-        requireNotNull(player).apply {
+        with(requireNotNull(player)) {
+            addMetadataOutput(metadataOutput)
             prepare(mediaSource)
             playWhenReady = true
         }
@@ -91,11 +94,17 @@ class PlayerHolder(private val context: Context,
     }
 
     private fun setPlaybackState(state: Int) {
+        val customAction = PlaybackStateCompat.CustomAction
+                .Builder(CUSTOM_ACTION_FAVORITE, context.getString(R.string.action_favorite_name), R.drawable.ic_round_star_border_24dp)
+                .setExtras(bundleOf(EXTRA_CHANNEL to channel))
+                .build()
+
         session.setPlaybackState(PlaybackStateCompat.Builder()
                 .setState(state, 0, 0f)
                 .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE or
                         PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
                         PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+                .addCustomAction(customAction)
                 .build())
     }
 
