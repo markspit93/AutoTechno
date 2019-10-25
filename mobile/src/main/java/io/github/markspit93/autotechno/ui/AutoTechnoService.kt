@@ -10,11 +10,10 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat.MediaItem
 import android.support.v4.media.session.MediaSessionCompat
-import android.util.Log
 import androidx.media.MediaBrowserServiceCompat
-import io.github.markspit93.autotechno.PREF_LAST_MEDIA_ID
+import io.github.markspit93.autotechno.*
+import io.github.markspit93.autotechno.channel.Channel
 import io.github.markspit93.autotechno.channel.ChannelHelper
-import io.github.markspit93.autotechno.lazyAndroid
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import kotlin.properties.Delegates.notNull
 
@@ -33,13 +32,17 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
 
     private var session: MediaSessionCompat by notNull()
     private var lastMediaId by stringSharedPreference(PREF_LAST_MEDIA_ID, "")
-    private val playerHolder by lazyAndroid { PlayerHolder(this, session) }
+
+    private val favoritesHelper = FavoritesHelper(this)
+    private val playerHolder by lazyAndroid { PlayerHolder(this, session, favoritesHelper) }
 
     private val audioManager by lazyAndroid { getSystemService(Context.AUDIO_SERVICE) as AudioManager }
     private var audioFocusRequest: AudioFocusRequest? = null
 
     private val connectedReceiver = ConnectedReceiver()
     private val onAudioNoisyReceiver = OnAudioNoisyReceiver()
+
+    private lateinit var currentChannel: Channel
 
     override fun onCreate() {
         super.onCreate()
@@ -48,7 +51,6 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
         sessionToken = session.sessionToken
 
         session.setCallback(MediaSessionCallback())
-        session.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
 
         playerHolder.createPlayer()
 
@@ -66,10 +68,10 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
     }
 
     override fun onLoadChildren(parentMediaId: String, result: Result<List<MediaItem>>) {
-        if (parentMediaId == ROOT_ID) {
-            result.sendResult(ChannelHelper.createBrowsableListing())
-        } else {
-            result.sendResult(ChannelHelper.createChildrenListing(this, parentMediaId))
+        when (parentMediaId) {
+            ROOT_ID -> result.sendResult(ChannelHelper.createBrowsableListing(this))
+            MEDIA_ID_FAVORITES -> result.sendResult(ChannelHelper.createFavoriteListing(this, favoritesHelper.getFavoriteChannels()))
+            else -> result.sendResult(ChannelHelper.createChildrenListing(this, parentMediaId))
         }
     }
 
@@ -87,6 +89,7 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
         session.release()
     }
 
+    @Suppress("DEPRECATION")
     private fun getAudioFocus(): Int {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
@@ -100,6 +103,7 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun abandonAudioFocus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioFocusRequest?.let { audioManager.abandonAudioFocusRequest(it) }
@@ -108,14 +112,15 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
         }
     }
 
-
     private inner class MediaSessionCallback : MediaSessionCompat.Callback() {
 
         private fun play(mediaId: String) {
             if (getAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                currentChannel = ChannelHelper.getChannelForId(mediaId)
+
                 session.isActive = true
                 lastMediaId = mediaId
-                playerHolder.startPlaying(ChannelHelper.getChannelForId(mediaId))
+                playerHolder.startPlaying(currentChannel)
             }
         }
 
@@ -159,6 +164,18 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
             session.isActive = false
             playerHolder.stopPlaying()
             stopSelf()
+        }
+
+        override fun onCustomAction(action: String?, extras: Bundle?) {
+            if (action == CUSTOM_ACTION_FAVORITE) {
+                if (favoritesHelper.isFavorited(currentChannel)) {
+                    favoritesHelper.deleteFavorite(currentChannel)
+                } else {
+                    favoritesHelper.addFavorite(currentChannel)
+                }
+
+                playerHolder.updateFavoritedState()
+            }
         }
     }
 

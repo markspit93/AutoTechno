@@ -292,6 +292,7 @@ object ChannelList {
             Channel("epictrance", "Epic Trance", R.drawable.epictrance),
             Channel("goapsy", "Goa-Psy Trance", R.drawable.goapsytrance),
             Channel("handsup", "Hands Up", R.drawable.handsup),
+            Channel("melodicprogressive", "Melodic Progressive", R.drawable.melodicprogressive),
             Channel("progressive", "Progressive", R.drawable.progressive),
             Channel("progressivepsy", "Progressive Psy", R.drawable.progressivepsy),
             Channel("trance", "Trance", R.drawable.trance),

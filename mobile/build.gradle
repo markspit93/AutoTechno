@@ -1,14 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
     defaultConfig {
         applicationId "io.github.markspit93.autotechno"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -39,12 +40,15 @@ android {
 ext {
     anko_version = '0.10.8'
 
-    androidxAppCompatVersion = '1.0.2'
+    androidKtxVersion = '1.1.0'
+    androidxAppCompatVersion = '1.1.0'
+    androidxMediaVersion = '1.1.0'
     androidxConstraintLayoutVersion = '1.1.3'
+    androidxRoomVersion = '2.2.1'
+
     androidMaterialVersion = '1.0.0'
 
-    exoPlayerVersion = '2.9.5'
-    exoPlayerIcyVersion = '2.1.0'
+    exoPlayerVersion = '2.10.4'
 }
 
 dependencies {
@@ -52,12 +56,17 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
+    implementation "androidx.core:core-ktx:$androidKtxVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.media:media:$androidxMediaVersion"
     implementation "androidx.constraintlayout:constraintlayout:$androidxConstraintLayoutVersion"
+
+    implementation "androidx.room:room-runtime:$androidxRoomVersion"
+    kapt "androidx.room:room-compiler:$androidxRoomVersion"
+
     implementation "com.google.android.material:material:$androidMaterialVersion"
 
     implementation "com.google.android.exoplayer:exoplayer:$exoPlayerVersion"
-    implementation "saschpe.android:exoplayer2-ext-icy:$exoPlayerIcyVersion"
 
     implementation 'it.czerwinski.android:delegates-shared-preferences:0.1'
 }
