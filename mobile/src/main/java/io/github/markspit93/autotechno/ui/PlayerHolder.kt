@@ -7,7 +7,6 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v4.media.session.PlaybackStateCompat.STATE_STOPPED
-import androidx.core.os.bundleOf
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.metadata.MetadataOutput
 import com.google.android.exoplayer2.metadata.icy.IcyInfo
@@ -23,15 +22,17 @@ import io.github.markspit93.autotechno.channel.Channel
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 
 class PlayerHolder(private val context: Context,
-                   private val session: MediaSessionCompat) : Player.EventListener {
+                   private val session: MediaSessionCompat,
+                   private val favoritesHelper: FavoritesHelper) : Player.EventListener {
 
     private val listenerKey by context.stringSharedPreference(PREF_LISTENER_KEY, "")
 
     private var player: SimpleExoPlayer? = null
-    private var channel: Channel? = null
+    private var currentState = STATE_STOPPED
+    private lateinit var channel: Channel
 
     fun createPlayer() {
-        setPlaybackState(STATE_STOPPED)
+        setPlaybackState(STATE_STOPPED, true)
         player = ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector())
         player!!.addListener(this)
     }
@@ -93,19 +94,33 @@ class PlayerHolder(private val context: Context,
         player = null
     }
 
-    private fun setPlaybackState(state: Int) {
-        val customAction = PlaybackStateCompat.CustomAction
-                .Builder(CUSTOM_ACTION_FAVORITE, context.getString(R.string.action_favorite_name), R.drawable.ic_round_star_border_24dp)
-                .setExtras(bundleOf(EXTRA_CHANNEL to channel))
-                .build()
+    fun updateFavoritedState() {
+        setPlaybackState(currentState)
+    }
 
-        session.setPlaybackState(PlaybackStateCompat.Builder()
-                .setState(state, 0, 0f)
-                .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE or
-                        PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
-                        PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
-                .addCustomAction(customAction)
-                .build())
+    private fun setPlaybackState(state: Int, isInitializing: Boolean = false) {
+        currentState = state
+
+        if (isInitializing) {
+            session.setPlaybackState(PlaybackStateCompat.Builder()
+                    .setState(state, 0, 0f)
+                    .build())
+        } else {
+            val favoriteDrawableRes =
+                    if (favoritesHelper.isFavorited(channel)) R.drawable.ic_round_star_24dp else R.drawable.ic_round_star_border_24dp
+
+            val customAction = PlaybackStateCompat.CustomAction
+                    .Builder(CUSTOM_ACTION_FAVORITE, context.getString(R.string.action_favorite_name), favoriteDrawableRes)
+                    .build()
+
+            session.setPlaybackState(PlaybackStateCompat.Builder()
+                    .setState(state, 0, 0f)
+                    .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE or
+                            PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or
+                            PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+                    .addCustomAction(customAction)
+                    .build())
+        }
     }
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {

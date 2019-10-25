@@ -14,7 +14,6 @@ import androidx.media.MediaBrowserServiceCompat
 import io.github.markspit93.autotechno.*
 import io.github.markspit93.autotechno.channel.Channel
 import io.github.markspit93.autotechno.channel.ChannelHelper
-import io.github.markspit93.autotechno.room.AutoTechnoDatabase
 import it.czerwinski.android.delegates.sharedpreferences.stringSharedPreference
 import kotlin.properties.Delegates.notNull
 
@@ -33,7 +32,9 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
 
     private var session: MediaSessionCompat by notNull()
     private var lastMediaId by stringSharedPreference(PREF_LAST_MEDIA_ID, "")
-    private val playerHolder by lazyAndroid { PlayerHolder(this, session) }
+
+    private val favoritesHelper = FavoritesHelper(this)
+    private val playerHolder by lazyAndroid { PlayerHolder(this, session, favoritesHelper) }
 
     private val audioManager by lazyAndroid { getSystemService(Context.AUDIO_SERVICE) as AudioManager }
     private var audioFocusRequest: AudioFocusRequest? = null
@@ -41,8 +42,7 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
     private val connectedReceiver = ConnectedReceiver()
     private val onAudioNoisyReceiver = OnAudioNoisyReceiver()
 
-    private val database by lazyAndroid {AutoTechnoDatabase.getInstance(this) }
-    private val favoriteChannels by lazyAndroid { database.favoriteDao().loadFavorites().toMutableList() }
+    private lateinit var currentChannel: Channel
 
     override fun onCreate() {
         super.onCreate()
@@ -51,7 +51,6 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
         sessionToken = session.sessionToken
 
         session.setCallback(MediaSessionCallback())
-        session.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
 
         playerHolder.createPlayer()
 
@@ -71,7 +70,7 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
     override fun onLoadChildren(parentMediaId: String, result: Result<List<MediaItem>>) {
         when (parentMediaId) {
             ROOT_ID -> result.sendResult(ChannelHelper.createBrowsableListing(this))
-            MEDIA_ID_FAVORITES -> result.sendResult(ChannelHelper.createFavoriteListing(this, favoriteChannels))
+            MEDIA_ID_FAVORITES -> result.sendResult(ChannelHelper.createFavoriteListing(this, favoritesHelper.getFavoriteChannels()))
             else -> result.sendResult(ChannelHelper.createChildrenListing(this, parentMediaId))
         }
     }
@@ -117,9 +116,11 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
 
         private fun play(mediaId: String) {
             if (getAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                currentChannel = ChannelHelper.getChannelForId(mediaId)
+
                 session.isActive = true
                 lastMediaId = mediaId
-                playerHolder.startPlaying(ChannelHelper.getChannelForId(mediaId))
+                playerHolder.startPlaying(currentChannel)
             }
         }
 
@@ -167,15 +168,13 @@ class AutoTechnoService : MediaBrowserServiceCompat(), AudioManager.OnAudioFocus
 
         override fun onCustomAction(action: String?, extras: Bundle?) {
             if (action == CUSTOM_ACTION_FAVORITE) {
-                val channel: Channel = extras!!.getParcelable(EXTRA_CHANNEL)!!
-
-                if (favoriteChannels.contains(channel)) {
-                    favoriteChannels.remove(channel)
-                    database.favoriteDao().deleteFavorite(channel)
+                if (favoritesHelper.isFavorited(currentChannel)) {
+                    favoritesHelper.deleteFavorite(currentChannel)
                 } else {
-                    favoriteChannels.add(channel)
-                    database.favoriteDao().insertFavorite(channel)
+                    favoritesHelper.addFavorite(currentChannel)
                 }
+
+                playerHolder.updateFavoritedState()
             }
         }
     }

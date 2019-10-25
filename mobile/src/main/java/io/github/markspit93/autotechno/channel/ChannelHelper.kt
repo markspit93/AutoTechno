@@ -15,7 +15,7 @@ object ChannelHelper {
         val mediaDescListing = arrayListOf<MediaItem>()
 
         // Add Favorites
-        val iconUri = Uri.parse("android.resource://io.github.markspit93.autotechno/drawable/ic_round_star_18dp")
+        val iconUri = Uri.parse("android.resource://io.github.markspit93.autotechno/drawable/ic_round_star_24dp")
         val favoritesDesc = MediaDescriptionCompat.Builder()
                 .setMediaId(MEDIA_ID_FAVORITES)
                 .setTitle(context.getString(io.github.markspit93.autotechno.R.string.favorites))

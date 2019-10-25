@@ -14,4 +14,7 @@ interface FavoriteChannelDao {
 
     @Delete
     fun deleteFavorite(favoriteChannel: Channel)
+
+    @Query("SELECT * FROM channel WHERE mediaId LIKE :mediaId ")
+    fun findChannel(mediaId: String): Channel?
 }
