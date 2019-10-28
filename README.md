@@ -27,3 +27,5 @@ Screenshots
 ![Media Session](screenshot1.PNG)
 
 ![Media Browser](screenshot2.PNG)
+
+![Media Browser](screenshot3.PNG)
